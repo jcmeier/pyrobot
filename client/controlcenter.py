@@ -16,9 +16,20 @@ stdscr.addstr(0, 0, "Welcome to the robot control center",
               curses.A_REVERSE)
 stdscr.refresh()
 
+
+def get_message():
+    string = ""
+    while 1:
+        c = stdscr.getch()
+        if c == 10:
+            break
+        string += chr(c)
+        stdscr.addstr(12, 10, "Message: " + string, curses.A_REVERSE)
+    return string
+
 while 1:
     c = stdscr.getch()
-    stdscr.addstr(20, 20, "%i" %c, curses.A_REVERSE)
+    #stdscr.addstr(20, 20, "%i" %c, curses.A_REVERSE)
     if c == ord('q'):
         break
 
@@ -38,7 +49,10 @@ while 1:
         send_command("stop")
 
     elif c == ord('m'):
-        stdscr.addstr(10, 10, "sending message", curses.A_REVERSE)
-        send_command("message hallo")
+        stdscr.refresh()
+        stdscr.addstr(10, 10, "Enter message to send", curses.A_REVERSE)
+        message = get_message()
+        if message:
+            send_command("message " + message)
 
 curses.endwin()
