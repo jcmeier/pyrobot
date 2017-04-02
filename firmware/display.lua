@@ -1,3 +1,4 @@
+require("displayfont")
 MAX7219_REG_NOOP        = 0x00
 MAX7219_REG_DECODEMODE  = 0x09
 MAX7219_REG_INTENSITY   = 0x0A
@@ -8,12 +9,9 @@ MAX7219_REG_DISPLAYTEST = 0x0F
 all =   {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}
 happy = {0x3C, 0x42, 0xA5, 0x81, 0xA5, 0x99, 0x42, 0x3C}
 frown = {0x3C, 0x42, 0xA5, 0x81, 0xBD, 0x81, 0x42, 0x3C}
-sad = {0x3C, 0x42, 0xA5, 0x81, 0x99, 0xA5, 0x42, 0x3C}
-N = { 0x7F, 0x7F, 0x06, 0x0C, 0x18, 0x7F, 0x7F, 0x00 }
-O = { 0x1C, 0x3E, 0x63, 0x41, 0x63, 0x3E, 0x1C, 0x00 }
-R = { 0x41, 0x7F, 0x7F, 0x09, 0x19, 0x7F, 0x66, 0x00 }
-A = { 0x7C, 0x7E, 0x13, 0x13, 0x7E, 0x7C, 0x00, 0x00 }
-faces = {all, happy, frown, sad, N, O, R, A}
+sad = {0x3C, 0x42, 0xA5, 0x81, 0x99, 0xA5, 0x42, 0x3C }
+
+faces = {all, happy, frown, sad}
 
 function sendByte(reg, data)
   spi.send(1,reg * 256 + data)
@@ -26,6 +24,14 @@ function displayFace(faceIndex)
   for i=1,8 do
     sendByte(i,face[i])
   end
+end
+
+function display_letter(letter)
+    for i=1,8 do
+        if letters[letter] then
+            sendByte(i,letters[letter][i])
+        end
+    end
 end
 
 function setup_display()
@@ -41,12 +47,24 @@ function setup_display()
     tmr.stop(0)
 end
 
--- changes the face every two seconds cycling through the array of faces
+stop_moody = false
+
 function moody(i)
-  faceIndex = (i % 8) + 1
-  displayFace(faceIndex)
-  tmr.alarm(0, 2000, 0, function()
-    moody(faceIndex)
-  end);
+    if not stop_moody then
+        faceIndex = (i % 4) + 1
+        displayFace(faceIndex)
+        tmr.alarm(0, 2000, 0, function()
+            moody(faceIndex)
+        end);
+    end
 end
 
+function display_message(message, index)
+    index = (index % string.len(message)) + 1
+    stop_moody = true
+    char = string.sub(message, index, index)
+    display_letter(string.upper(char))
+    tmr.alarm(0, 2000, 0, function()
+        display_message(message, index)
+    end);
+end

@@ -37,4 +37,8 @@ while 1:
     elif c == 32:
         send_command("stop")
 
+    elif c == ord('m'):
+        stdscr.addstr(10, 10, "sending message", curses.A_REVERSE)
+        send_command("message hallo")
+
 curses.endwin()

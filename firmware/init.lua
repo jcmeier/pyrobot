@@ -1,4 +1,4 @@
-robot_display = require("display")
+require("display")
 
 function start_wlan()
     station_cfg={}
@@ -99,8 +99,11 @@ function handle_udp_packet(srv, command)
        elseif command == "turn_right" then
              left_forward()
              right_backward()
-       
-       end    
+
+       elseif string.sub(command, 1, 8) == "message " then
+           display_message(string.sub(command, 9, string.len(command)), 0)
+
+       end
 end
 
 function start_udpserver()
@@ -114,5 +117,5 @@ stop()
 start_wlan()
 start_udpserver()
 
-robot_display.setup_display()
-robot_display.moody(0)
+setup_display()
+moody(0)
