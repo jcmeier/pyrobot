@@ -3,7 +3,7 @@ require("display")
 function start_wlan()
     station_cfg={}
     station_cfg.ssid="Blubberblah"
-    station_cfg.pwd="$freibier23"
+    station_cfg.pwd="*****"
     wifi.setmode(wifi.STATION)
     wifi.sta.config(station_cfg)
     wifi.sta.sethostname("Catch-me-if-you-can")
