@@ -16,7 +16,7 @@ TURN_LEFT = "turn_left"
 
 
 def send_command(command):
-    UDP_IP = "192.168.178.117"
+    UDP_IP = "192.168.178.111"
     UDP_PORT = 4242
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
