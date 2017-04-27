@@ -1,9 +1,6 @@
-DATA = 2
-CLOCK = 0
-LATCH = 1
-
-WHITE = 4
-GREEN = 3
+DATA = 1
+CLOCK = 2
+LATCH = 0
 
 function wifi_connect()
     station_cfg={}
@@ -11,7 +8,7 @@ function wifi_connect()
     station_cfg.pwd="password"
     wifi.setmode(wifi.STATION)
     wifi.sta.config(station_cfg)
-    wifi.sta.sethostname("Gamepad of death")
+    --wifi.sta.sethostname("Gamepad of death")
     wifi.sta.connect()
     
 end
@@ -36,10 +33,8 @@ function latch()
 end
 
 function send_command(command)
-   gpio.write(WHITE, gpio.HIGH)
    cu = net.createUDPSocket()
    cu:send(4242,'192.168.178.111', command)
-   gpio.write(WHITE, gpio.LOW)
 end
 
 function main_loop()  
@@ -97,7 +92,6 @@ end
 
 function start()
     if wifi.sta.getip() then
-        gpio.write(GREEN, gpio.HIGH)
         init()
         main_loop() 
     else 
@@ -106,10 +100,4 @@ function start()
 end
 
 wifi_connect()
-
-gpio.mode(WHITE, gpio.OUTPUT)
-gpio.write(WHITE, gpio.LOW)
-gpio.mode(GREEN, gpio.OUTPUT)
-gpio.write(GREEN, gpio.LOW)
-
 start()
