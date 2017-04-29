@@ -118,4 +118,4 @@ start_wlan()
 start_udpserver()
 
 setup_display()
-moody(0)
+show_animation_from_file(0)
