@@ -27,7 +27,7 @@ function show_animation_from_file(position)
         end    
         
         file.close()
-        tmr.alarm(0, 2000, 0, function() 
+        tmr.alarm(0, 500, 0, function() 
                 show_animation_from_file(position)
             end)
     end
