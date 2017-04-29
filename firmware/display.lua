@@ -34,6 +34,25 @@ function display_letter(letter)
     end
 end
 
+function show_animation_from_file(position)
+    if file.open("animation.bytes", "r") then
+        s = file.stat("animation.bytes")
+        if s.size == position then
+            position = 0
+        end    
+        file.seek(position)
+        for i=1,8 do
+            position = position + 1
+            file.seek("set", position)
+            sendByte(i, file.read(1))
+        end    
+        file.close()
+        tmr.alarm(0, 2000, 0, function() 
+                show_animation_from_file(position)
+            end)
+    end
+end        
+
 function setup_display()
     spi.setup(1, spi.MASTER, spi.CPOL_LOW, spi.CPHA_LOW, 16, 8)
 

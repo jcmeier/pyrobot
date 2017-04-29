@@ -13,14 +13,17 @@ const uint64_t IMAGES[] = {
 const int IMAGES_LEN = sizeof(IMAGES)/8;
 
 int main() {
-  printf("animation = {\n");
+  FILE *fp;
+  fp = fopen("animation.bytes", "w+");
+  //printf("animation = {\n");
   for(int i=0; i < IMAGES_LEN; i++) {
     uint64_t image = IMAGES[i];
     for(int j=0; j<8; j++) { 
       char result = (image >> (j * 8)) & 0xFF;
-      printf("0x%hhx, ", result);  
+      fputc(result, fp); 
+      printf("0x%hhx ", result);  
     }
-    printf("}, \n");
+    //printf("}, \n");
   }
-  printf("\n}");
+  //printf("\n}");
 }
