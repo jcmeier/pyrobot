@@ -10,6 +10,7 @@ function start_pong_game()
 
 	print_game()
 	clock_game()
+	print "--"
 	print_game()
 end
 
@@ -54,9 +55,21 @@ function clock_game()
 end 
 
 function move_ball()
-	game_field[ball_position[0][ball_position[1]] = 0
-	if ball_direction == 1:
+	game_field[ball_position[1]][ball_position[2]] = 0
+	print(ball_direction)
+	if ball_direction == 1 then
+		ball_position[1] = ball_position[1] - 1
+		ball_position[2] = ball_position[2] + 1
+	elseif ball_direction == 2 then
+		ball_position[2] = ball_position[2] + 1
+	
+	elseif ball_direction == 3 then
+		ball_position[1] = ball_position[1] + 1
+		ball_position[2] = ball_position[2] + 1
+
 	end	
+	game_field[ball_position[1]][ball_position[2]] = 1
+
 end
 
 function check_score()
