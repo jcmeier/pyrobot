@@ -1,14 +1,19 @@
 require("display")
 
 function start_wlan()
-    station_cfg={}
-    station_cfg.ssid="Blubberblah"
-    station_cfg.pwd="fasdfsdfsdf"
-    wifi.setmode(wifi.STATION)
-    wifi.sta.config(station_cfg)
-    wifi.sta.sethostname("Catch-me-if-you-can")
-    wifi.sta.connect()
-    print(wifi.sta.getip())
+    wifi.setmode(wifi.SOFTAP)
+    cfg={}
+    cfg.ssid="Come to daddy!"
+    cfg.pwd="mypassword"
+    wifi.ap.config(cfg)
+
+    cfg =
+    {
+        ip="192.168.42.1",
+        netmask="255.255.255.0",
+        gateway="192.168.42.1"
+    }
+    wifi.ap.setip(cfg)
 end
 
 function init_ports()
@@ -48,12 +53,12 @@ function right_forward()
     gpio.write(3, gpio.LOW)
 end
 
-function backward()
+function forward()
     left_backward()
     right_backward()
 end
 
-function forward()
+function backward()
     left_forward()
     right_forward()
 end    
