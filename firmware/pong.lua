@@ -7,11 +7,6 @@ function start_pong_game()
 	position_player_1(3)
 	position_player_2(3)
 	init_ball()
-
-	print_game()
-	clock_game()
-	print "--"
-	print_game()
 end
 
 function position_player_1(y)
@@ -52,6 +47,9 @@ end
 function clock_game()
 	move_ball()
 	check_score()
+
+	print "--"
+	print_game()
 end 
 
 function move_ball()
@@ -67,12 +65,30 @@ function move_ball()
 		ball_position[1] = ball_position[1] + 1
 		ball_position[2] = ball_position[2] + 1
 
-	end	
+	end
+	check_collision()
 	game_field[ball_position[1]][ball_position[2]] = 1
 
 end
 
+function check_collision()
+	if ball_position[1] < 1 then
+		ball_position[1] = 2
+		ball_position[2] = ball_position[1] + 1
+	elseif ball_position[2] > 7 then
+
+	elseif ball_position[1] > 8 then
+		ball_position[1] = 8
+		ball_position[2] = ball_position[1] - 1
+	end
+end	
+
 function check_score()
+end
+
+function convert_game_for_display()
+	row = 0x00;
+	
 end
 
 function print_game()
