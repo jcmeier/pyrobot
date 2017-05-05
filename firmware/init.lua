@@ -123,4 +123,4 @@ start_wlan()
 start_udpserver()
 
 setup_display()
-show_animation_from_file(0)
+--show_animation_from_file(0)

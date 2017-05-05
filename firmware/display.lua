@@ -27,7 +27,8 @@ function show_animation_from_file(position)
         end    
         
         file.close()
-        tmr.alarm(0, 500, 0, function() 
+        local mytmr = tmr.create()
+        mytmr:alarm(0, 500, 0, function() 
                 show_animation_from_file(position)
             end)
     end
