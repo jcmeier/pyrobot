@@ -20,30 +20,67 @@ max7219.setup({ debug = true, numberOfModules = 4, slaveSelectPin = 8, intensity
 brightness = 0
 multiply = 1
 
-function show_time() 
+function shallowcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in pairs(orig) do
+            copy[orig_key] = orig_value
+        end
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
+function show_time(blink) 
 	second, minute, hour, day, date, month, year = ds3231.getTime();
 
 	if hour > 9 then
 		hour_string = string.format("%s", hour)
-		first = letters[string.sub(hour_string, 1, 1)]
-		second = letters[string.sub(hour_string, 2, 2)]
+		hour_first = shallowcopy(letters[string.sub(hour_string, 1, 1)])
+		hour_second = shallowcopy(letters[string.sub(hour_string, 2, 2)])
 	else
 	    hour_string = string.format("%s", hour)
-	    first = letters["0"]
-		second = letters[string.sub(hour_string, 1, 1)]
+	    hour_first = shallowcopy(letters["0"])
+		hour_second = shallowcopy(letters[string.sub(hour_string, 1, 1)])
 	end
 
 
 	if minute > 9 then
 		minute_string = string.format("%s", minute)
-		minute_first = letters[string.sub(minute_string, 1, 1)]
-		minute_second = letters[string.sub(minute_string, 2, 2)]
+		minute_first = shallowcopy(letters[string.sub(minute_string, 1, 1)])
+		minute_second = shallowcopy(letters[string.sub(minute_string, 2, 2)])
 	else
-	    hour_string = string.format("%s", hour)
-	    first = letters["0"]
-		second = letters[string.sub(hour_string, 1, 1)]
+	    minute_string = string.format("%s", minute)
+	    minute_first = shallowcopy(letters["0"])
+		minute_second = shallowcopy(letters[string.sub(minute_string, 1, 1)])
 	end
 
-	max7219.write({first, second, minute_first, minute_second})
-	tmr.create():alarm(1000, tmr.ALARM_SINGLE, show_time)
+	if blink == true then
+		hour_second[8] = bit.set(hour_second[8], 3, 4)
+		blink = false
+	else 
+		hour_second[8] = bit.clear(hour_second[8], 3, 4)
+		blink = true
+	end
+
+	seconds_iterate = second / 2
+	for i=1,seconds_iterate do
+		if i <= 8 then
+			hour_first[i] = bit.set(hour_first[i], 7)
+		elseif i <= 16 then
+			hour_second[i-8] = bit.set(hour_second[i-8], 7)
+		elseif i <= 24 then
+			minute_first[i-16] = bit.set(minute_first[i-16], 7)
+		elseif i <= 30 then
+			minute_second[i-24] = bit.set(minute_second[i-24], 7)	
+		end
+	end
+
+	max7219.write({hour_first, hour_second, minute_first, minute_second})
+	tmr.create():alarm(500, tmr.ALARM_SINGLE, function() 
+		show_time(blink)
+	end)
 end
