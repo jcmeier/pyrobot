@@ -7,6 +7,7 @@ function start_pong_game()
 	position_player_1(3)
 	position_player_2(3)
 	init_ball()
+	show_game_on_display()
 end
 
 function position_player_1(y)
@@ -40,16 +41,13 @@ end
 function init_ball()
 	game_field[4][2] = 1
 	ball_position = {4, 2}
-	math.randomseed(os.time())
-	ball_direction = math.random(3)
+	ball_direction = node.random(3)
 end
 
 function clock_game()
 	move_ball()
 	check_score()
-
-	print "--"
-	print_game()
+	show_game_on_display()
 end 
 
 function move_ball()
@@ -86,17 +84,17 @@ end
 function check_score()
 end
 
-function convert_game_for_display()
-	row = 0x00;
-	
-end
-
-function print_game()
-	for i=1,8 do
-		for j=1,8 do
-			io.write(game_field[i][j])
-		end	 
-		print()
+function show_game_on_display()
+	for i = 1,8 do
+		b = 0x0;
+		for j=0,7 do
+			if game_field[j+1][i] == 1 then
+				b = bit.bor(b, bit.set(b, j))
+			end	
+		end
+		
+		sendByte(i, bit.band(b, 0xff))
 	end
 end
-start_pong_game()
+
+--start_pong_game()
