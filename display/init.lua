@@ -1,2 +1,6 @@
-dofile("clock.lua")
-show_time()
+tmr.create():alarm(5000, tmr.ALARM_SINGLE, function()
+    require("clock")
+    tmr.create():alarm(1000, tmr.ALARM_SINGLE, function()
+        show_time()
+    end)
+end)
