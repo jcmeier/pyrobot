@@ -34,6 +34,30 @@ function shallowcopy(orig)
     return copy
 end
 
+function animate_all_on(position, first, second, third, fourth)
+	if position <= 8 then
+		first[position] = bit.set(first[position], 0, 1, 2, 3, 4, 5, 6, 7)
+	
+	elseif position <= 16 then
+		second[position-8] = bit.set(second[position-8], 0, 1, 2, 3, 4, 5, 6, 7)
+	
+	elseif position <= 24 then
+		third[position-16] = bit.set(third[position-16], 0, 1, 2, 3, 4, 5, 6, 7)
+
+	elseif position <= 32 then
+		fourth[position-24] = bit.set(fourth[position-24], 0, 1, 2, 3, 4, 5, 6, 7)	
+	end
+	
+	max7219.write({first, second, third, fourth})
+	if position <= 32 then
+		position = position + 1
+		tmr.create():alarm(1, tmr.ALARM_SINGLE, function() 
+			show_clockturn_animation(position, first, second, third, fourth)
+		end)
+	end
+	
+end
+
 function show_time(blink) 
 	second, minute, hour, day, date, month, year = ds3231.getTime();
 
@@ -78,9 +102,17 @@ function show_time(blink)
 			minute_second[i-24] = bit.set(minute_second[i-24], 7)	
 		end
 	end
+	if second > 57 then
+		all_on= {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff}
+		max7219.write{all_on, all_on, all_on, all_on}
+		timer_time = 1
+	else
+		max7219.write({hour_first, hour_second, minute_first, minute_second})
+		timer_time = 500
+	end
 
-	max7219.write({hour_first, hour_second, minute_first, minute_second})
-	tmr.create():alarm(500, tmr.ALARM_SINGLE, function() 
+	tmr.create():alarm(timer_time, tmr.ALARM_SINGLE, function() 
 		show_time(blink)
 	end)
+	
 end
