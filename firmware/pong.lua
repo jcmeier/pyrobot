@@ -52,16 +52,27 @@ end
 
 function move_ball()
 	game_field[ball_position[1]][ball_position[2]] = 0
-	print(ball_direction)
 	if ball_direction == 1 then
 		ball_position[1] = ball_position[1] - 1
 		ball_position[2] = ball_position[2] + 1
+	
 	elseif ball_direction == 2 then
 		ball_position[2] = ball_position[2] + 1
 	
 	elseif ball_direction == 3 then
 		ball_position[1] = ball_position[1] + 1
 		ball_position[2] = ball_position[2] + 1
+
+	elseif ball_direction == 4 then
+		ball_position[1] = ball_position[1] + 1
+		ball_position[2] = ball_position[2] - 1
+
+	elseif ball_direction == 5 then
+		ball_position[2] = ball_position[2] - 1
+
+	elseif ball_direction == 6 then
+		ball_position[1] = ball_position[1] - 1
+		ball_position[2] = ball_position[2] - 1
 
 	end
 	check_collision()
@@ -72,12 +83,18 @@ end
 function check_collision()
 	if ball_position[1] < 1 then
 		ball_position[1] = 2
-		ball_position[2] = ball_position[1] + 1
+		ball_position[2] = ball_position[2]
+		ball_direction = 3
+
 	elseif ball_position[2] > 7 then
+		ball_position[2] = 7
+		ball_direction = node.random(4, 6)
+		print(ball_direction)
 
 	elseif ball_position[1] > 8 then
-		ball_position[1] = 8
-		ball_position[2] = ball_position[1] - 1
+		ball_position[1] = 7
+		ball_position[2] = ball_position[2]
+		ball_direction = 1
 	end
 end	
 
