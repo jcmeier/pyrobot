@@ -104,7 +104,7 @@ function show_time(blink)
 	end
 	if second > 57 then
 		all_on= {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff}
-		max7219.write{all_on, all_on, all_on, all_on}
+		max7219.write({all_on, all_on, all_on, all_on})
 		timer_time = 1
 	else
 		max7219.write({hour_first, hour_second, minute_first, minute_second})
