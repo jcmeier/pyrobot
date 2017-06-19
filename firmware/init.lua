@@ -33,6 +33,7 @@ function right_stop()
     gpio.write(3, gpio.LOW)
 end
 
+
 function left_backward()
     gpio.write(0, gpio.HIGH)
     gpio.write(1, gpio.LOW)
@@ -43,12 +44,12 @@ function left_forward()
     gpio.write(1, gpio.HIGH)
 end
 
-function right_backward()
+function right_forward()
     gpio.write(2, gpio.LOW)
     gpio.write(3, gpio.HIGH)
 end
 
-function right_forward()
+function right_backward()
     gpio.write(2, gpio.HIGH)
     gpio.write(3, gpio.LOW)
 end
