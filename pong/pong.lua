@@ -8,6 +8,8 @@ game_started = false
 player_1_point = 0
 player_2_point = 0
 
+clock_speed = 300
+
 function start_pong_game()
 	create_game_field()
 	position_player_1(current_position_player_1)
@@ -64,6 +66,8 @@ function move_ball()
 	-- ball_position[2] == x
 	game_field[ball_position[1]][ball_position[2]] = 0
 
+	print("Game started")
+	print(game_started)
 	print("Before collision")
 	print(ball_direction)
 	print(ball_position[1])
@@ -74,42 +78,44 @@ function move_ball()
 	print(ball_position[1])
 	print(ball_position[2])
 
-	if ball_direction == 1 then
-		ball_position[1] = ball_position[1] - 1
-		ball_position[2] = ball_position[2] + 1
-	
-	elseif ball_direction == 2 then
-		ball_position[2] = ball_position[2] + 1
-	
-	elseif ball_direction == 3 then
-		ball_position[1] = ball_position[1] + 1
-		ball_position[2] = ball_position[2] + 1
+	if game_started then
+		if ball_direction == 1 then
+			ball_position[1] = ball_position[1] - 1
+			ball_position[2] = ball_position[2] + 1
+		
+		elseif ball_direction == 2 then
+			ball_position[2] = ball_position[2] + 1
+		
+		elseif ball_direction == 3 then
+			ball_position[1] = ball_position[1] + 1
+			ball_position[2] = ball_position[2] + 1
 
-	elseif ball_direction == 4 then
-		ball_position[1] = ball_position[1] + 1
-		ball_position[2] = ball_position[2] - 1
+		elseif ball_direction == 4 then
+			ball_position[1] = ball_position[1] + 1
+			ball_position[2] = ball_position[2] - 1
 
-	elseif ball_direction == 5 then
-		ball_position[2] = ball_position[2] - 1
+		elseif ball_direction == 5 then
+			ball_position[2] = ball_position[2] - 1
 
-	elseif ball_direction == 6 then
-		ball_position[1] = ball_position[1] - 1
-		ball_position[2] = ball_position[2] - 1
+		elseif ball_direction == 6 then
+			ball_position[1] = ball_position[1] - 1
+			ball_position[2] = ball_position[2] - 1
 
+		end
+
+		game_field[ball_position[1]][ball_position[2]] = 1
 	end
-
-	game_field[ball_position[1]][ball_position[2]] = 1
-
 end
 
 function check_collision()
 	-- LEFT collision
 	if ball_position[2] == 2 then
+		clock_speed = clock_speed - 10
 
 		bar_bottom = current_position_player_1 + 3
 		if current_position_player_1 > ball_position[1] or bar_bottom < ball_position[1] then
 			game_started = false
-			player_1_point = player_1_point + 1
+			player_2_point = player_2_point + 1
 
 		elseif ball_position[1] == 1 then
 			ball_position[1] = 1
@@ -125,10 +131,12 @@ function check_collision()
 		
 	-- RIGHT collision
 	elseif ball_position[2] == 7 then
+		clock_speed = clock_speed - 10
+		
 		bar_bottom = current_position_player_2 + 3
 		if current_position_player_2 > ball_position[1] or bar_bottom < ball_position[1] then
 			game_started = false
-			player_2_point = player_2_point + 1
+			player_1_point = player_1_point + 1
 
 		elseif ball_position[1] == 1 then
 			ball_position[1] = 1
@@ -165,9 +173,23 @@ function check_collision()
 
 end	
 
+function player2_down()
+	if current_position_player_2 < 5 then
+		current_position_player_2 = current_position_player_2 + 1
+		position_player_2(current_position_player_2)
+		show_game_on_display()
+	end
+end
+
+function player2_up()
+	if current_position_player_2 > 1 then
+		current_position_player_2 = current_position_player_2 - 1
+		position_player_2(current_position_player_2)
+		show_game_on_display()
+	end
+end
+
 function player_down()
-	print(current_position_player_1)
-	
 	if current_position_player_1 < 5 then
 		current_position_player_1 = current_position_player_1 + 1
 		position_player_1(current_position_player_1)
@@ -176,7 +198,6 @@ function player_down()
 end
 
 function player_up()
-	print(current_position_player_1)
 	if current_position_player_1 > 1 then
 		current_position_player_1 = current_position_player_1 - 1
 		position_player_1(current_position_player_1)
@@ -185,6 +206,12 @@ function player_up()
 end
 
 function check_score()
+	print("-- Scores --")
+	print("player1")
+	print(player_1_point)
+	print("player2")
+	print(player_2_point)
+	
 end
 
 function show_game_on_display()
@@ -202,18 +229,19 @@ end
 
 function start_game_clock()
 
-	if not tmr.create():alarm(300, tmr.ALARM_SINGLE, function()
+	if not tmr.create():alarm(clock_speed, tmr.ALARM_SINGLE, function()
 	  if game_started == true then
 	  	clock_game()
 	  end
 	end)
 	then
-	  print("whoopsie")
+	  print("Could not start game clock!!")
 	end
 end
 
 function start_game()
 	if game_started == false then
+		clock_speed = 300
 		game_started = true
 		start_pong_game()
 		start_game_clock()
